@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英语场景学习助手</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            /* 莫兰迪色系配色 */
+            --morandi-beige: #F0ECE2;  /* 米白 */
+            --morandi-brown: #C7B198;  /* 灰棕 */
+            --morandi-dark: #596E79;   /* 深灰蓝 */
+            --morandi-accent: #B85042; /* 红棕 */
+            --morandi-light: #DFD7BF;  /* 浅米 */
+            
+            /* 文字颜色 */
+            --text-dark: #3A3845;
+            --text-medium: #6D6A75;
+            --text-light: #9E9BA4;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--morandi-beige);
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 渐变背景效果 */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px 0;
+            background: linear-gradient(135deg, var(--morandi-beige) 0%, var(--morandi-light) 100%);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(135deg, 
+                rgba(182, 181, 167, 0.1) 0%, 
+                rgba(199, 177, 152, 0.2) 50%, 
+                rgba(89, 110, 121, 0.1) 100%);
+            z-index: -1;
+            border-radius: 15px;
+        }
+
+        .header h1 {
+            color: var(--morandi-dark);
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .header .subtitle {
+            color: var(--morandi-brown);
+            margin-top: 8px;
+            font-size: 1rem;
+        }
+
+        /* 输入区域样式 */
+        .input-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            border: 1px solid rgba(199, 177, 152, 0.3);
+        }
+
+        .search-box {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        #sceneInput {
+            flex: 1;
+            padding: 14px 18px;
+            border: 1px solid var(--morandi-light);
+            border-radius: 8px 0 0 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+            background-color: rgba(240, 236, 226, 0.3);
+        }
+
+        #sceneInput:focus {
+            border-color: var(--morandi-brown);
+            box-shadow: 0 0 0 3px rgba(199, 177, 152, 0.2);
+        }
+
+        #searchBtn {
+            padding: 14px 24px;
+            background-color: var(--morandi-dark);
+            color: white;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        #searchBtn:hover {
+            background-color: var(--morandi-brown);
+        }
+
+        /* 示例按钮 */
+        .examples {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: var(--morandi-brown);
+        }
+
+        .example-btn {
+            padding: 8px 16px;
+            background-color: rgba(199, 177, 152, 0.15);
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--morandi-dark);
+            transition: all 0.3s;
+        }
+
+        .example-btn:hover {
+            background-color: var(--morandi-brown);
+            color: white;
+        }
+
+        /* 进度条样式 */
+        .progress-tracker {
+            display: flex;
+            justify-content: space-between;
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .progress-tracker::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: rgba(199, 177, 152, 0.3);
+            z-index: 1;
+            border-radius: 2px;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--text-medium);
+            margin-bottom: 8px;
+            border: 3px solid rgba(199, 177, 152, 0.3);
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .step-label {
+            font-size: 0.85rem;
+            color: var(--text-medium);
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .progress-step.active .step-icon {
+            background-color: var(--morandi-dark);
+            color: white;
+            border-color: var(--morandi-dark);
+        }
+
+        .progress-step.active .step-label {
+            color: var(--morandi-dark);
+            font-weight: 600;
+        }
+
+        /* 学习区域样式 */
+        .learning-area {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            min-height: 300px;
+            border: 1px solid rgba(199, 177, 152, 0.2);
+        }
+
+        .welcome-message {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .welcome-message h2 {
+            color: var(--morandi-dark);
+            margin-bottom: 15px;
+        }
+
+        .welcome-message p {
+            color: var(--text-medium);
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        /* 特性卡片 */
+        .features {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .feature {
+            flex: 1;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: rgba(240, 236, 226, 0.5);
+            transition: all 0.3s;
+            border: 1px solid rgba(199, 177, 152, 0.2);
+            text-align: center;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            background-color: white;
+        }
+
+        .feature i {
+            font-size: 2.2rem;
+            color: var(--morandi-brown);
+            margin-bottom: 15px;
+        }
+
+        .feature h3 {
+            margin: 15px 0 8px;
+            color: var(--morandi-dark);
+        }
+
+        .feature p {
+            font-size: 0.9rem;
+            color: var(--text-medium);
+            margin: 0;
+        }
+
+        /* 学习卡片样式 */
+        .learning-card {
+            margin-bottom: 25px;
+            animation: fadeIn 0.5s ease-out;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-header {
+            background: linear-gradient(to right, var(--morandi-dark), var(--morandi-brown));
+            color: white;
+            padding: 15px 20px;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .card-body {
+            padding: 20px;
+            background-color: white;
+        }
+
+        .expression {
+            margin-bottom: 18px;
+            padding-bottom: 18px;
+            border-bottom: 1px dashed rgba(199, 177, 152, 0.3);
+        }
+
+        .expression:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .english {
+            font-weight: 600;
+            color: var(--morandi-dark);
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+        }
+
+        .chinese {
+            color: var(--text-medium);
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        .upgrade-arrow {
+            color: var(--morandi-accent);
+            margin: 10px 0;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        /* 导航按钮 */
+        .navigation-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .prev-btn {
+            background-color: rgba(199, 177, 152, 0.15);
+            color: var(--morandi-dark);
+        }
+
+        .next-btn {
+            background: linear-gradient(to right, var(--morandi-dark), var(--morandi-brown));
+            color: white;
+            box-shadow: 0 3px 10px rgba(89, 110, 121, 0.2);
+        }
+
+        .prev-btn:hover {
+            background-color: var(--morandi-brown);
+            color: white;
+        }
+
+        .next-btn:hover {
+            background: linear-gradient(to right, var(--morandi-brown), var(--morandi-dark));
+            transform: translateY(-2px);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header {
+                padding: 25px 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .features {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .progress-tracker {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 25px;
+            }
+            
+            .progress-tracker::before {
+                display: none;
+            }
+            
+            .progress-step {
+                width: 45%;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            #sceneInput {
+                border-radius: 8px;
+                margin-bottom: 10px;
+            }
+            
+            #searchBtn {
+                border-radius: 8px;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header {
+                padding: 20px 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .input-section {
+                padding: 20px 15px;
+            }
+            
+            .learning-area {
+                padding: 20px;
+            }
+            
+            .progress-step {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            .navigation-buttons {
+                flex-direction: column;
+            }
+            
+            .nav-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-language"></i> 英语场景学习助手</h1>
+            <p class="subtitle">从基础到母语级的渐进式学习</p>
+        </header>
+
+        <div class="input-section">
+            <div class="search-box">
+                <input type="text" id="sceneInput" placeholder="输入场景关键词 (如: 餐厅点餐、酒店入住)">
+                <button id="searchBtn"><i class="fas fa-search"></i> 开始学习</button>
+            </div>
+            <div class="examples">
+                <span>试试这些场景:</span>
+                <button class="example-btn" data-scene="restaurant">餐厅点餐</button>
+                <button class="example-btn" data-scene="airport">机场值机</button>
+                <button class="example-btn" data-scene="shopping">商场购物</button>
+            </div>
+        </div>
+
+        <div class="progress-tracker">
+            <div class="progress-step active" data-level="1">
+                <div class="step-icon">1</div>
+                <div class="step-label">基础短句</div>
+            </div>
+            <div class="progress-step" data-level="2">
+                <div class="step-icon">2</div>
+                <div class="step-label">添加细节</div>
+            </div>
+            <div class="progress-step" data-level="3">
+                <div class="step-icon">3</div>
+                <div class="step-label">完整对话</div>
+            </div>
+            <div class="progress-step" data-level="4">
+                <div class="step-icon">4</div>
+                <div class="step-label">母语表达</div>
+            </div>
+        </div>
+
+        <div id="learningArea" class="learning-area">
+            <div class="welcome-message">
+                <h2>欢迎使用英语场景学习助手</h2>
+                <p>输入您想练习的英语场景关键词，系统将引导您从基础表达逐步提升到母语级水平。</p>
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-layer-group"></i>
+                        <h3>渐进式学习</h3>
+                        <p>从简单短句到复杂表达</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-palette"></i>
+                        <h3>场景化练习</h3>
+                        <p>真实场景中的实用英语</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-brain"></i>
+                        <h3>AI智能指导</h3>
+                        <p>个性化学习路径</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 配置您的DeepSeek API Key
+        const API_KEY = "YOUR_DEEPSEEK_API_KEY"; // 替换为您的实际API Key
+
+        // 场景学习模板
+        const LEARNING_TEMPLATES = [
+            // 级别1: 基础短句
+            (scene) => `请为"${scene}"场景生成3个最基础的英语短句，适合初学者使用。格式为：英文|中文解释`,
+            
+            // 级别2: 添加细节
+            (scene) => `为"${scene}"场景中的基础短句添加形容词/地点/时间等细节，生成3个升级版表达。格式：基础句 -> 升级句|解释`,
+            
+            // 级别3: 完整对话
+            (scene) => `创建"${scene}"场景的6轮完整对话，包含自然的开始和结束。格式：A: 英文|中文 - B: 英文|中文`,
+            
+            // 级别4: 母语表达
+            (scene) => `提供"${scene}"场景中母语者常用的3个高级表达或习语。格式：表达|字面意思|实际含义`
+        ];
+
+        // DOM元素
+        const sceneInput = document.getElementById('sceneInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const learningArea = document.getElementById('learningArea');
+        const progressSteps = document.querySelectorAll('.progress-step');
+        const exampleBtns = document.querySelectorAll('.example-btn');
+
+        // 当前学习状态
+        let currentScene = '';
+        let currentLevel = 1;
+
+        // 事件监听
+        searchBtn.addEventListener('click', startLearning);
+        exampleBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                sceneInput.value = e.target.dataset.scene;
+                startLearning();
+            });
+        });
+
+        // 开始学习流程
+        async function startLearning() {
+            const scene = sceneInput.value.trim();
+            if (!scene) {
+                alert('请输入要学习的场景关键词');
+                return;
+            }
+            
+            currentScene = scene;
+            currentLevel = 1;
+            updateProgressTracker();
+            
+            // 显示加载状态
+            learningArea.innerHTML = `
+                <div class="learning-card">
+                    <div class="card-header">正在准备"${scene}"场景的学习内容...</div>
+                    <div class="card-body">
+                        <div style="text-align: center; padding: 30px;">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--morandi-brown);"></i>
+                            <p style="margin-top: 15px; color: var(--morandi-dark);">正在生成学习材料</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // 开始第一级别的学习
+            await loadLearningContent(scene, 1);
+        }
+
+        // 加载学习内容
+        async function loadLearningContent(scene, level) {
+            try {
+                const prompt = LEARNING_TEMPLATES[level - 1](scene);
+                const response = await callDeepSeekAPI(prompt);
+                
+                // 格式化响应内容
+                const formattedContent = formatLearningContent(response, level);
+                
+                // 显示学习内容
+                learningArea.innerHTML = `
+                    <div class="learning-card">
+                        <div class="card-header">${getLevelTitle(level)}: ${scene}</div>
+                        <div class="card-body">
+                            ${formattedContent}
+                            <div class="navigation-buttons">
+                                ${level > 1 ? `<button class="nav-btn prev-btn" onclick="changeLevel(${level - 1})"><i class="fas fa-arrow-left"></i> 上一级</button>` : ''}
+                                ${level < 4 ? `<button class="nav-btn next-btn" onclick="changeLevel(${level + 1})">下一级 <i class="fas fa-arrow-right"></i></button>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                learningArea.innerHTML = `
+                    <div class="learning-card">
+                        <div class="card-header">出错啦</div>
+                        <div class="card-body">
+                            <p style="color: var(--morandi-accent);">加载学习内容时出错，请稍后再试。</p>
+                            <button class="nav-btn prev-btn" onclick="startLearning()" style="margin-top: 20px;">重试</button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // 调用DeepSeek API
+        async function callDeepSeekAPI(prompt) {
+            const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: "deepseek-chat",
+                    messages: [{ role: "user", content: prompt }],
+                    temperature: 0.7
+                })
+            });
+            
+            const data = await response.json();
+            return data.choices[0].message.content;
+        }
+
+        // 格式化学习内容
+        function formatLearningContent(content, level) {
+            const lines = content.split('\n').filter(line => line.trim());
+            let html = '';
+            
+            if (level === 1) {
+                // 基础短句格式
+                lines.forEach(line => {
+                    const [english, chinese] = line.split('|');
+                    html += `
+                        <div class="expression">
+                            <div class="english">${english}</div>
+                            <div class="chinese">${chinese}</div>
+                        </div>
+                    `;
+                });
+            } else if (level === 2) {
+                // 升级表达格式
+                lines.forEach(line => {
+                    const [basic, rest] = line.split(' -> ');
+                    const [advanced, explanation] = rest.split('|');
+                    
+                    html += `
+                        <div class="expression">
+                            <div class="english">${basic}</div>
+                            <div class="upgrade-arrow"><i class="fas fa-arrow-down"></i></div>
+                            <div class="english">${advanced}</div>
+                            <div class="chinese">${explanation}</div>
+                        </div>
+                    `;
+                });
+            } else if (level === 3) {
+                // 完整对话格式
+                lines.forEach(line => {
+                    const [aPart, bPart] = line.split(' - ');
+                    const [aEng, aChi] = aPart.split('|');
+                    const [bEng, bChi] = bPart.split('|');
+                    
+                    html += `
+                        <div class="expression">
+                            <div class="english">${aEng}</div>
+                            <div class="chinese">${aChi}</div>
+                            <div class="english">${bEng}</div>
+                            <div class="chinese">${bChi}</div>
+                        </div>
+                    `;
+                });
+            } else if (level === 4) {
+                // 母语表达格式
+                lines.forEach(line => {
+                    const [expression, literal, meaning] = line.split('|');
+                    
+                    html += `
+                        <div class="expression">
+                            <div class="english">${expression}</div>
+                            <div class="chinese"><strong>字面意思:</strong> ${literal}</div>
+                            <div class="chinese"><strong>实际含义:</strong> ${meaning}</div>
+                        </div>
+                    `;
+                });
+            }
+            
+            return html;
+        }
+
+        // 获取级别标题
+        function getLevelTitle(level) {
+            const titles = ['基础短句', '添加细节', '完整对话', '母语表达'];
+            return titles[level - 1];
+        }
+
+        // 更新进度跟踪器
+        function updateProgressTracker() {
+            progressSteps.forEach(step => {
+                step.classList.remove('active');
+                if (parseInt(step.dataset.level) <= currentLevel) {
+                    step.classList.add('active');
+                }
+            });
+        }
+
+        // 改变学习级别
+        async function changeLevel(level) {
+            currentLevel = level;
+            updateProgressTracker();
+            await loadLearningContent(currentScene, level);
+        }
+    </script>
+</body>
+</html>

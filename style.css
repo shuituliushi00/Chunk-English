@@ -1,0 +1,312 @@
+:root {
+    --primary: #6D8B74; /* 莫兰迪绿 */
+    --secondary: #A7BEAE; /* 浅绿 */
+    --accent: #B85042; /* 莫兰迪红 */
+    --light: #E7E8D1; /* 米白 */
+    --dark: #3A4E48; /* 深绿 */
+    --text: #333333;
+    --text-light: #666666;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: var(--text);
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.header h1 {
+    color: var(--dark);
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 600;
+}
+
+.header .subtitle {
+    color: var(--text-light);
+    margin-top: 5px;
+    font-size: 1rem;
+}
+
+.input-section {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+.search-box {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+#sceneInput {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px 0 0 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.3s;
+}
+
+#sceneInput:focus {
+    border-color: var(--primary);
+}
+
+#searchBtn {
+    padding: 12px 20px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+#searchBtn:hover {
+    background-color: var(--dark);
+}
+
+.examples {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.example-btn {
+    padding: 6px 12px;
+    background-color: var(--light);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+.example-btn:hover {
+    background-color: var(--secondary);
+    color: white;
+}
+
+.progress-tracker {
+    display: flex;
+    justify-content: space-between;
+    margin: 30px 0;
+    position: relative;
+}
+
+.progress-tracker::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: #eee;
+    z-index: 1;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.step-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    transition: all 0.3s;
+}
+
+.step-label {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    text-align: center;
+}
+
+.progress-step.active .step-icon {
+    background-color: var(--primary);
+    color: white;
+}
+
+.progress-step.active .step-label {
+    color: var(--dark);
+    font-weight: 500;
+}
+
+.learning-area {
+    background-color: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    min-height: 300px;
+}
+
+.welcome-message {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.welcome-message h2 {
+    color: var(--dark);
+    margin-bottom: 15px;
+}
+
+.welcome-message p {
+    color: var(--text-light);
+    margin-bottom: 30px;
+}
+
+.features {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    gap: 20px;
+}
+
+.feature {
+    flex: 1;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: var(--light);
+    transition: transform 0.3s;
+}
+
+.feature:hover {
+    transform: translateY(-5px);
+}
+
+.feature i {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.feature h3 {
+    margin: 10px 0 5px;
+    color: var(--dark);
+}
+
+.feature p {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin: 0;
+}
+
+/* 学习卡片样式 */
+.learning-card {
+    margin-bottom: 20px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card-header {
+    background-color: var(--primary);
+    color: white;
+    padding: 12px 15px;
+    border-radius: 8px 8px 0 0;
+    font-weight: 500;
+}
+
+.card-body {
+    padding: 15px;
+    border: 1px solid #eee;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+}
+
+.expression {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #eee;
+}
+
+.expression:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.english {
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 5px;
+}
+
+.chinese {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.upgrade-arrow {
+    color: var(--accent);
+    margin: 5px 0;
+    text-align: center;
+}
+
+/* 响应式设计 */
+@media (max-width: 600px) {
+    .features {
+        flex-direction: column;
+    }
+    
+    .progress-tracker {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    .progress-tracker::before {
+        display: none;
+    }
+    
+    .search-box {
+        flex-direction: column;
+    }
+    
+    #sceneInput {
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+    
+    #searchBtn {
+        border-radius: 8px;
+    }
+}
